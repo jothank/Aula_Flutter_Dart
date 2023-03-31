@@ -81,138 +81,148 @@ class _JogoState extends State<Jogo> {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: GestureDetector(
-                  onTap: () => _opcaoSelecionada("pedra"),
-                  child: ClipOval(
-                    clipBehavior: Clip.antiAlias,
-                    child: Image.asset(
-                      "images/pedra.png",
-                      height: 100,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: GestureDetector(
-                  onTap: () => _opcaoSelecionada("papel"),
-                  child: ClipOval(
-                    clipBehavior: Clip.antiAlias,
-                    child: Image.asset(
-                      "images/papel.png",
-                      height: 100,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: GestureDetector(
-                  onTap: () => _opcaoSelecionada("tesoura"),
-                  child: ClipOval(
-                    clipBehavior: Clip.antiAlias,
-                    child: Image.asset(
-                      "images/tesoura.png",
-                      height: 100,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          SuaJogada(),
           Padding(
             padding: EdgeInsets.only(top: 32, bottom: 16),
             child: Text("Jogada do Computador",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ),
-          ClipOval(
-            clipBehavior: Clip.antiAlias,
-            child: Image(
-              image: this._imagemApp,
-              height: 100,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 32, bottom: 16),
-            child: Text(this._mensagem,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          ),
+          JogadaComputadorRandom(),
+          TextoResultadoJogada(),
           Padding(
             padding: EdgeInsets.only(top: 32, bottom: 16),
             child: Text("Resultado",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      "Você",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      "$_userWin",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Empate",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      "$_empate",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Computador",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      "$_computerWin",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )
+          Resultado()
         ],
       ),
+    );
+  }
+
+  Row SuaJogada() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: GestureDetector(
+            onTap: () => _opcaoSelecionada("pedra"),
+            child: ClipOval(
+              clipBehavior: Clip.antiAlias,
+              child: Image.asset(
+                "images/pedra.png",
+                height: 100,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: GestureDetector(
+            onTap: () => _opcaoSelecionada("papel"),
+            child: ClipOval(
+              clipBehavior: Clip.antiAlias,
+              child: Image.asset(
+                "images/papel.png",
+                height: 100,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: GestureDetector(
+            onTap: () => _opcaoSelecionada("tesoura"),
+            child: ClipOval(
+              clipBehavior: Clip.antiAlias,
+              child: Image.asset(
+                "images/tesoura.png",
+                height: 100,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  ClipOval JogadaComputadorRandom() {
+    return ClipOval(
+      clipBehavior: Clip.antiAlias,
+      child: Image(
+        image: this._imagemApp,
+        height: 100,
+      ),
+    );
+  }
+
+  Padding TextoResultadoJogada() {
+    return Padding(
+      padding: EdgeInsets.only(top: 32, bottom: 16),
+      child: Text(this._mensagem,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  Row Resultado() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Você",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "$_userWin",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "Empate",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "$_empate",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "Computador",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "$_computerWin",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
