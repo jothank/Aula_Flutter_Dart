@@ -2,85 +2,216 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 void main() {
-  runApp(const MaterialApp(
-    home: HomePage(),
+  runApp(MaterialApp(
+    home: Jogo(),
     debugShowCheckedModeBanner: false,
   ));
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
+class Jogo extends StatefulWidget {
   @override
-  State<HomePage> createState() => _HomePageState();
+  _JogoState createState() => _JogoState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _JogoState extends State<Jogo> {
+  var _imagemApp = AssetImage("images/padrao.png");
+  var _mensagem = "Escolha uma opção abaixo";
+  var _userWin = 0;
+  var _computerWin = 0;
+  var _empate = 0;
+
+  void _opcaoSelecionada(String escolhaUsuario) {
+    var opcoes = ["pedra", "papel", "tesoura"];
+    var numero = Random().nextInt(3);
+    var escolhaApp = opcoes[numero];
+
+    //Exibição da imagem escolhida pelo App
+    switch (escolhaApp) {
+      case "pedra":
+        setState(() {
+          this._imagemApp = AssetImage("images/pedra.png");
+        });
+        break;
+      case "papel":
+        setState(() {
+          this._imagemApp = AssetImage("images/papel.png");
+        });
+        break;
+      case "tesoura":
+        setState(() {
+          this._imagemApp = AssetImage("images/tesoura.png");
+        });
+    }
+
+    //Validação do ganhador
+    if ((escolhaUsuario == "pedra" && escolhaApp == "tesoura") ||
+        (escolhaUsuario == "tesoura" && escolhaApp == "papel") ||
+        (escolhaUsuario == "papel" && escolhaApp == "pedra")) {
+      setState(() {
+        this._mensagem = "Você ganhou";
+        _userWin += 1;
+      });
+    } else if ((escolhaUsuario == "tesoura" && escolhaApp == "pedra") ||
+        (escolhaUsuario == "papel" && escolhaApp == "tesoura") ||
+        (escolhaUsuario == "pedra" && escolhaApp == "papel")) {
+      setState(() {
+        this._mensagem = "Você perdeu";
+        _computerWin += 1;
+      });
+    } else {
+      setState(() {
+        this._mensagem = "Empatamos";
+        _empate += 1;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Text('Sua Jogada'),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/pedra.png'),
-                      radius: 60,
-                      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text("JokenPo"),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 32, bottom: 16),
+            child: Text("Sua Jogada",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () => _opcaoSelecionada("pedra"),
+                  child: ClipOval(
+                    clipBehavior: Clip.antiAlias,
+                    child: Image.asset(
+                      "images/pedra.png",
+                      height: 100,
                     ),
-                    CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/papel.png'),
-                      radius: 60,
-                      backgroundColor: Colors.white,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () => _opcaoSelecionada("papel"),
+                  child: ClipOval(
+                    clipBehavior: Clip.antiAlias,
+                    child: Image.asset(
+                      "images/papel.png",
+                      height: 100,
                     ),
-                    CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/tesoura.png'),
-                      radius: 60,
-                      backgroundColor: Colors.white,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () => _opcaoSelecionada("tesoura"),
+                  child: ClipOval(
+                    clipBehavior: Clip.antiAlias,
+                    child: Image.asset(
+                      "images/tesoura.png",
+                      height: 100,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 32, bottom: 16),
+            child: Text("Jogada do Computador",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          ),
+          ClipOval(
+            clipBehavior: Clip.antiAlias,
+            child: Image(
+              image: this._imagemApp,
+              height: 100,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 32, bottom: 16),
+            child: Text(this._mensagem,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 32, bottom: 16),
+            child: Text("Resultado",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      "Você",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      "$_userWin",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
-              Text('Jogada do Computador'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/pedra.png'),
-                    radius: 60,
-                    backgroundColor: Colors.white,
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Empate",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      "$_empate",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
-              Text('Resultado'),
-              Container(
-                  child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Você'),
-                      Text('Computador'),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('0'),
-                      Text('0'),
-                    ],
-                  ),
-                ],
-              )),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Computador",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      "$_computerWin",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
             ],
-          ),
-        ),
+          )
+        ],
       ),
     );
   }
