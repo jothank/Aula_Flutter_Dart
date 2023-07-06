@@ -86,6 +86,10 @@ class _FoodSelectionPageState extends State<FoodSelectionPage> {
       }
 
       subtotal -= food.price;
+
+      if (subtotal <= 0) {
+        subtotal = 0.0;
+      }
     });
   }
 
@@ -120,7 +124,8 @@ class _FoodSelectionPageState extends State<FoodSelectionPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => CartPage(cartItems, subtotal)),
+                  builder: (context) => CartPage(cartItems),
+                ),
               );
             },
           ),

@@ -18,4 +18,14 @@ class FoodItemModel {
   void toggleFavorite() {
     isFavorite = !isFavorite;
   }
+
+  void incrementQuantity() {
+    quantity++;
+  }
+
+  void decrementQuantity() {
+    if (quantity > 0) {
+      quantity--;
+    }
+  }
 }

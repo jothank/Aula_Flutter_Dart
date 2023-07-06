@@ -1,11 +1,61 @@
 import 'package:flutter/material.dart';
 import 'food_item_model.dart';
+import 'dart:math';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   final List<FoodItemModel> cartItems;
-  final double subtotal;
 
-  const CartPage(this.cartItems, this.subtotal);
+  CartPage(this.cartItems);
+
+  @override
+  _CartPageState createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  List<FoodItemModel> _cartItems = [];
+  double subtotal = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _cartItems = List.from(widget.cartItems);
+    _calculateSubtotal();
+  }
+
+  void _calculateSubtotal() {
+    subtotal =
+        _cartItems.fold(0.0, (sum, item) => sum + (item.price * item.quantity));
+  }
+
+  void addToCart(FoodItemModel food) {
+    final existingFoodIndex =
+        _cartItems.indexWhere((item) => item.name == food.name);
+
+    if (existingFoodIndex != -1) {
+      setState(() {
+        _cartItems[existingFoodIndex].quantity++;
+        _calculateSubtotal();
+      });
+    } else {
+      setState(() {
+        food.quantity = 1;
+        _cartItems.add(food);
+        _calculateSubtotal();
+      });
+    }
+  }
+
+  void removeFromCart(FoodItemModel food) {
+    setState(() {
+      food.quantity--;
+      if (food.quantity <= 0 ||
+          food.quantity == false ||
+          food.quantity == null) {
+        _cartItems.remove(food);
+      }
+      _calculateSubtotal();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,24 +65,46 @@ class CartPage extends StatelessWidget {
         backgroundColor: Colors.red,
       ),
       body: ListView.builder(
-        itemCount: cartItems.length,
+        itemCount: _cartItems.length,
         itemBuilder: (context, index) {
-          final food = cartItems[index];
-          return ListTile(
-            leading: Image.asset(
-              food.imagePath,
-              width: 48.0,
-              height: 48.0,
+          final food = _cartItems[index];
+          if (food.quantity <= 0) {
+            return Container();
+          }
+          return Card(
+            child: ListTile(
+              leading: Image.asset(
+                food.imagePath,
+                width: 48.0,
+                height: 48.0,
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(food.name),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: () {
+                          removeFromCart(food);
+                        },
+                      ),
+                      Text('Quantidade: ${food.quantity.toString()}'),
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          addToCart(food);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              subtitle: Text(
+                'Valor: R\$ ${(food.price * food.quantity).toStringAsFixed(2)}',
+              ),
             ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(food.name),
-                Text('Quantidade: ${food.quantity.toString()}'),
-              ],
-            ),
-            subtitle: Text(
-                'Valor: R\$ ${(food.price * food.quantity).toStringAsFixed(2)}'),
           );
         },
       ),
