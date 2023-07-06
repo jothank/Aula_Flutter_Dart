@@ -1,51 +1,57 @@
 import 'package:flutter/material.dart';
 import 'food_item_model.dart';
 
-class FoodDetailsPage extends StatelessWidget {
+class FoodDetailsModal extends StatelessWidget {
   final FoodItemModel food;
 
-  const FoodDetailsPage(this.food);
+  const FoodDetailsModal(this.food);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Detalhes do Produto'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Image.asset(
-              food.imagePath,
-              fit: BoxFit.cover,
+    return Card(
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: 250.0,
+              height: 250.0,
+              child: Image.asset(
+                food.imagePath,
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  food.name,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    food.name,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  'R\$ ${food.price.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+                  SizedBox(height: 8.0),
+                  Text(
+                    'R\$ ${food.price.toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                SizedBox(height: 16.0),
-                Text(food.description),
-              ],
+                  SizedBox(height: 16.0),
+                  Text(
+                    food.description,
+                    textAlign: TextAlign.center, //
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

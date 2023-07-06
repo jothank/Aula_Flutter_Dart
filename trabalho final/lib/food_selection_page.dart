@@ -60,22 +60,46 @@ class _FoodSelectionPageState extends State<FoodSelectionPage> {
   double subtotal = 0.0;
 
   void addToCart(FoodItemModel food) {
-    setState(() {
-      cartItems.add(food);
-      subtotal += food.price;
-    });
+    final existingFoodIndex =
+        cartItems.indexWhere((item) => item.name == food.name);
+
+    if (existingFoodIndex != -1) {
+      setState(() {
+        cartItems[existingFoodIndex].quantity++;
+        subtotal += food.price;
+      });
+    } else {
+      setState(() {
+        food.quantity = 1;
+        cartItems.add(food);
+        subtotal += food.price;
+      });
+    }
   }
 
   void removeFromCart(FoodItemModel food) {
     setState(() {
-      cartItems.remove(food);
+      food.quantity--;
+
+      if (food.quantity <= 0) {
+        cartItems.remove(food);
+      }
+
       subtotal -= food.price;
+    });
+  }
+
+  void updateFavoriteStatus(List<FoodItemModel> favoriteItems) {
+    setState(() {
+      for (final food in foods) {
+        food.isFavorite = favoriteItems.contains(food);
+      }
     });
   }
 
   void toggleFavorite(FoodItemModel food) {
     setState(() {
-      food.isFavorite = !food.isFavorite;
+      food.toggleFavorite();
     });
   }
 
@@ -88,6 +112,7 @@ class _FoodSelectionPageState extends State<FoodSelectionPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Seleção de Comidas'),
+        backgroundColor: Colors.red,
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart),
@@ -95,21 +120,22 @@ class _FoodSelectionPageState extends State<FoodSelectionPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CartPage(cartItems, subtotal),
-                ),
+                    builder: (context) => CartPage(cartItems, subtotal)),
               );
             },
           ),
           IconButton(
             icon: Icon(Icons.favorite),
-            onPressed: () {
-              List<FoodItemModel> favoriteItems = getFavoriteItems();
-              Navigator.push(
+            onPressed: () async {
+              final favoriteItems = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FavoritesPage(favoriteItems),
+                  builder: (context) => FavoritesPage(getFavoriteItems()),
                 ),
               );
+              if (favoriteItems != null) {
+                updateFavoriteStatus(favoriteItems);
+              }
             },
           ),
         ],
@@ -117,25 +143,28 @@ class _FoodSelectionPageState extends State<FoodSelectionPage> {
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 0.75,
         ),
         itemCount: foods.length,
         itemBuilder: (context, index) {
           final food = foods[index];
           return GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FoodDetailsPage(food),
-                ),
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return FoodDetailsModal(food);
+                },
               );
             },
-            child: FoodItemCard(
-              food: food,
-              addToCart: addToCart,
-              removeFromCart: removeFromCart,
-              toggleFavorite: toggleFavorite,
+            child: Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: FoodItemCard(
+                food: food,
+                addToCart: addToCart,
+                removeFromCart: removeFromCart,
+                toggleFavorite: toggleFavorite,
+                imageSize: 300.0,
+              ),
             ),
           );
         },

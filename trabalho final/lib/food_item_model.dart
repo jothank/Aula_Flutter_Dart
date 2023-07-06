@@ -4,6 +4,7 @@ class FoodItemModel {
   final double price;
   final String imagePath;
   bool isFavorite;
+  int quantity;
 
   FoodItemModel({
     required this.name,
@@ -11,5 +12,10 @@ class FoodItemModel {
     required this.price,
     required this.imagePath,
     this.isFavorite = false,
+    this.quantity = 1,
   });
+
+  void toggleFavorite() {
+    isFavorite = !isFavorite;
+  }
 }

@@ -12,13 +12,27 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Carrinho'),
+        backgroundColor: Colors.red,
       ),
       body: ListView.builder(
         itemCount: cartItems.length,
         itemBuilder: (context, index) {
           final food = cartItems[index];
           return ListTile(
-            title: Text(food.name),
+            leading: Image.asset(
+              food.imagePath,
+              width: 48.0,
+              height: 48.0,
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(food.name),
+                Text('Quantidade: ${food.quantity.toString()}'),
+              ],
+            ),
+            subtitle: Text(
+                'Valor: R\$ ${(food.price * food.quantity).toStringAsFixed(2)}'),
           );
         },
       ),
@@ -35,11 +49,15 @@ class CartPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
-              child: Text('Finalizar Pedido'),
-              onPressed: () {
-                // Lógica para finalizar o pedido
-              },
+            SizedBox(
+              height: 35,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                ),
+                child: Text('Finalizar Pedido'),
+                onPressed: () {},
+              ),
             ),
           ],
         ),

@@ -6,12 +6,14 @@ class FoodItemCard extends StatelessWidget {
   final Function(FoodItemModel) addToCart;
   final Function(FoodItemModel) removeFromCart;
   final Function(FoodItemModel) toggleFavorite;
+  final double imageSize;
 
   const FoodItemCard({
     required this.food,
     required this.addToCart,
     required this.removeFromCart,
     required this.toggleFavorite,
+    required this.imageSize,
   });
 
   @override
@@ -22,7 +24,8 @@ class FoodItemCard extends StatelessWidget {
           Expanded(
             child: Image.asset(
               food.imagePath,
-              fit: BoxFit.cover,
+              width: imageSize,
+              height: imageSize,
             ),
           ),
           ListTile(
